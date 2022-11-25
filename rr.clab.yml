@@ -1,0 +1,21 @@
+name: rr
+
+topology:
+  nodes:
+    srlinux:
+      kind: srl
+      image: ghcr.io/nokia/srlinux
+      startup-config: srl.cfg.json
+    frr:
+      kind: linux
+      image: frrouting/frr:v8.4.1
+      binds:
+        - daemons:/etc/frr/daemons
+        - bgpd.conf:/etc/frr/bgpd.conf
+    gobgp:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool
+
+  links:
+    - endpoints: ["srlinux:e1-1", "frr:eth1"]
+    - endpoints: ["frr:eth2", "gobgp:eth1"]
